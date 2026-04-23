@@ -1,51 +1,102 @@
 # Understanding Birth Weight Variation in U.S. Birth Records
 
-This repository contains the full code, report, and figures for a birth weight analysis based on historical U.S. natality records from the National Center for Health Statistics (NCHS). The project studies how birth weight varies at both the individual level and the subgroup level, with a focus on maternal and paternal characteristics, demographic structure, and heterogeneity across geographic and demographic strata.
+This repository presents an end to end statistical analysis of historical U.S. natality records from the National Center for Health Statistics (NCHS). The project studies how birth weight varies at both the **individual level** and the **subpopulation level**, with particular attention to demographic structure, nonlinear age effects, and heterogeneity across county-year-sex-race strata.
 
-## Project motivation
+## Why this project matters
 
-Birth weight is a clinically important early-life outcome and a useful lens for understanding population health differences. Rather than stopping at a single regression model, this project combines two complementary perspectives:
+Birth weight is a clinically meaningful early-life outcome that is tied to infant risk, maternal health, and broader population disparities. A single pooled model can describe average trends, but it can also hide meaningful variation across locations and demographic groups. This project therefore combines two complementary perspectives:
 
-1. **Individual-level modeling** to study how birth weight changes with predictors such as infant sex, maternal age, paternal age, plurality, and birth order.
-2. **Subpopulation-level heterogeneity analysis** to examine how estimated effects and outcomes vary across counties, years, sex, and maternal-race strata.
+- **Individual-level modeling** to study how birth weight changes with predictors such as infant sex, maternal age, paternal age, plurality, and birth order.
+- **Subpopulation-level heterogeneity analysis** to examine how average outcomes and effect patterns vary across geography, time, sex, and maternal race.
 
-That combination makes the project both statistically rich and practically interpretable.
+That combination makes the project more than a standard regression exercise. It is designed to show both statistical depth and practical interpretation.
+
+## Project highlights
+
+- Built a reproducible preprocessing pipeline for historical fixed-width natality records
+- Analyzed both individual outcomes and aggregated subgroup summaries
+- Modeled nonlinear effects for maternal and paternal age
+- Used Gamma GLM and GEE style thinking for positively skewed birth weight outcomes
+- Quantified cross-stratum heterogeneity using summary statistics, z-score style calibration, and FDR-oriented screening
+- Paired code, report, and figures in one public-facing repository
 
 ## Data
 
-The analysis uses U.S. birth records released by the NCHS. The raw files are fixed-width natality records that were harmonized into tabular form using the preprocessing pipeline in `scripts/prep.py`.
+The analysis uses historical U.S. birth records released by the NCHS. Raw natality files were harmonized into analysis-ready tables using the preprocessing code in `scripts/prep.py`.
 
-Main data elements used in the analysis include:
+Key variables include:
+
 - birth weight
 - infant sex
 - maternal age
 - paternal age
 - plurality
 - birth order
-- county and state identifiers
+- state and county identifiers
 - year
 - maternal race
 
 ## Methods
 
-The repository includes code for both data preparation and statistical analysis.
+### 1. Individual-level analysis
 
-### Individual-level analysis
+The individual-level workflow focuses on explaining birth weight as a quantitative outcome.
+
+Main components:
 - missingness exploration and complete-case analysis
-- nonlinear age effects using polynomial and spline-style modeling
-- Gamma GLM/GEE style modeling for positively skewed birth weight outcomes
-- clustering-aware inference for grouped birth records
+- nonlinear age modeling
+- Gamma GLM and clustered inference ideas
+- interpretation of how demographic and parental characteristics relate to birth weight
 
-### Subpopulation heterogeneity analysis
-- construction of county-year-sex-race strata
-- subgroup summary statistics and empirical variability analysis
-- z-score style calibration across subpopulations
-- false discovery rate style screening for unusually large deviations
+### 2. Subpopulation heterogeneity analysis
+
+The second part of the project studies variability across county-year-sex-race strata.
+
+Main components:
+- construction of subgroup summaries
+- empirical variability analysis
+- standardized scores to identify unusual strata
+- false discovery style screening
 - heterogeneity summaries motivated by ICC-like reasoning
 
-## Main findings
+## Selected figures
 
-The report shows that birth weight variation is not explained by one factor alone. Several predictors have systematic associations with birth weight, and the strength of these patterns varies meaningfully across subpopulations. The subgroup analysis also shows substantial heterogeneity that would be hidden in a single pooled model.
+### Distribution of subgroup sample sizes
+
+This figure shows how uneven subgroup sizes are across county-year-sex-race strata, which is important for interpreting standard errors and subgroup stability.
+
+![Distribution of subgroup sample sizes](figures/Distribution%20of%20subgroup%20sample%20sizes.png)
+
+### Subgroup heterogeneity and stratum-specific deviations
+
+The following figures highlight the project's second major theme: pooled summaries can miss meaningful variation across subpopulations.
+
+<p float="left">
+  <img src="figures/stratum-specific%20Z-scores.png" alt="Stratum-specific Z-scores" width="48%" />
+  <img src="figures/FDR.png" alt="FDR plot" width="48%" />
+</p>
+
+### Relationship structure across subgroup summaries
+
+These plots help visualize how subgroup-level summaries relate to one another and where especially unusual or high-leverage strata may appear.
+
+<p float="left">
+  <img src="figures/scatter.png" alt="Scatter plot" width="48%" />
+  <img src="figures/Hexbin.png" alt="Hexbin plot" width="48%" />
+</p>
+
+### ICC-style heterogeneity summary
+
+This figure summarizes the scale of between-subgroup variability, reinforcing that birth weight patterns are not fully captured by a single national average trend.
+
+![ICC-style heterogeneity summary](figures/ICC%20line.png)
+
+## Main takeaways
+
+- Birth weight variation is not driven by a single predictor
+- Maternal and paternal characteristics matter, but their effects are not purely linear
+- Substantial heterogeneity remains across demographic and geographic strata
+- Aggregated subgroup analysis reveals structure that would be easy to miss in a single pooled model
 
 ## Repository structure
 
@@ -103,17 +154,17 @@ Use either the notebooks or the R Markdown files in `analysis/` depending on you
 
 ## Notes
 
-- The original project was created in a course setting and has been reorganized here into a cleaner public-facing repository.
-- The notebooks and report are included together so readers can connect the code to the statistical narrative.
-- Large raw data files are not committed to the repository.
+- The original project was created in a course setting and has been reorganized into a cleaner portfolio-style repository.
+- The notebooks, report, and figures are included together so readers can trace the full workflow from preprocessing to interpretation.
+- Large raw data files are intentionally not committed.
 
-## Possible future improvements
+## Possible next improvements
 
-- add a single environment lockfile for Python and R dependencies
-- refactor notebooks into reusable analysis scripts
-- add a small synthetic sample dataset for quick demonstration
-- export final figures with consistent naming and captions
+- refactor notebooks into modular analysis scripts
+- add an environment file for both Python and R dependencies
+- include a lightweight synthetic sample for fast demonstration
+- export a polished summary notebook or HTML report for non-technical readers
 
 ## Author
 
-Hao-Chun Shih
+**Hao-Chun Shih**
